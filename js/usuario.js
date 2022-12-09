@@ -103,27 +103,58 @@ function listarUsuarios(){
             for(const usuario of data){
                 console.log(usuario.correo)
                 usuarios += `
-                <tr>
-                    <th scope="row">${usuario.id}</th>
-                    <td>${usuario.nombre}</td>
-                    <td>${usuario.apellidos}</td>
-                    <td>${usuario.documento}</td>
-                    <td>${usuario.correo}</td>
-                    <td>
-                    <button type="button" class="btn btn-outline-danger" 
-                    onclick="eliminaUsuario('${usuario.id}')">
-                        <i class="fa-solid fa-user-minus"></i>
-                    </button>
-                    <a href="#" onclick="verModificarUsuario('${usuario.id}')" class="btn btn-outline-warning">
-                        <i class="fa-solid fa-user-pen"></i>
-                    </a>
-                    <a href="#" onclick="verUsuario('${usuario.id}')" class="btn btn-outline-info">
-                        <i class="fa-solid fa-eye"></i>
-                    </a>
-                    '</td>
-                    <br/>
-                </tr>`;
-                
+                <div class="card">
+                <div class="card-header">
+                    Listar productos del inventario
+                </div>
+                <div class="card-body">
+                   <div class="table-responsive">
+                    <table  class="table table-striped table-bordered" style="width:100%">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="text-align: center;">id usuario</th>
+                                <th style="text-align: center;">nombre</th>
+                                <th style="text-align: center;">apellidos</th>
+                                <th style="text-align: center;">documento</th>
+                                <th style="text-align: center;">correo</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista_productos">
+    
+                        <tr>
+                        <th scope="row">${usuario.id}</th>
+                        <td>${usuario.nombre}</td>
+                        <td>${usuario.apellidos}</td>
+                        <td>${usuario.documento}</td>
+                        <td>${usuario.correo}</td>
+                        <td>
+                        <button type="button" class="btn btn-outline-danger" 
+                        onclick="eliminaUsuario('${usuario.id}')">
+                            <i class="fa-solid fa-user-minus"></i>
+                        </button>
+                        <i class= "fas fa-edit" onclick="eliminaUsuario('${usuario.id}')" ></i>
+                        <a href="#" onclick="verModificarUsuario('${usuario.id}')" class="btn btn-outline-warning">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </a>
+                        <a href="#" onclick="verUsuario('${usuario.id}')" class="btn btn-outline-info">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        '</td>
+                        <br/>
+                    </tr>
+                           
+                                      
+                                    
+                                
+                            
+                            
+                        </tbody>
+                    </table>
+
+                    </div>
+                </div>
+            </div>`;
             }
             document.getElementById("datos").innerHTML = usuarios;
     })
@@ -157,7 +188,7 @@ function verModificarUsuario(id){
             'Authorization': localStorage.token
         },
     }
-    fetch(urlApi+"/usuario/"+id,settings)
+     fetch(urlApi+"/usuario/"+id,settings)
     .then(response => response.json())
     .then(function(usuario){
             var cadena='';
