@@ -22,7 +22,7 @@ function listarCategorias(){
                     <h1 class="display-5"><i class="fa-solid fa-list"></i> Listado de categorias</h1>
                 </div>
                   
-                <a href="#" onclick="registerForm('true')" class="btn btn-outline-success"><i class="fa-solid fa-user-plus"></i></a>
+                <a href="#" onclick="registerForm2('true')" class="btn btn-outline-success"><i class="fa-solid fa-user-plus"></i></a>
                 <table class="table">
                     <thead>
                         <tr>
@@ -107,13 +107,13 @@ function alertas(mensaje,tipo){
     document.getElementById("alerta").innerHTML = alerta;
 }
 
-function registerForm(auth=false){
+function registerForm2(auth=false){
     cadena = `
             <div class="p-3 mb-2 bg-light text-dark">
                 <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Registrar Categoria</h1>
             </div>
               
-            <form action="" method="post" id="myFormReg">
+            <form action="" method="post" id="myFormReg1">
                 <input type="hidden" name="id" id="id">
                 <label for="nombre" class="form-label">First Name</label>
                 <input type="text" class="form-control" name="nombre" id="nombre" required> <br>
@@ -126,19 +126,21 @@ function registerForm(auth=false){
             myModal.toggle();
 }
 
-async function registrarUsuario(auth=false){
-    var myForm = document.getElementById("myFormReg");
+async function registrarCategoria(auth=false){
+    validaToken();
+    var myForm = document.getElementById("myFormReg1");
     var formData = new FormData(myForm);
     var jsonData = {};
     for(var [k, v] of formData){//convertimos los datos a json
         jsonData[k] = v;
     }
-    console.log("data user ",jsonData);
-    const request = await fetch(urlApi2+"/usuario", {
+    //console.log("data user ",jsonData);
+    const request = await fetch(urlApi2+"/categoria", {
         method: 'POST',
         headers:{
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.token
         },
         body: JSON.stringify(jsonData)
     })
@@ -147,9 +149,9 @@ async function registrarUsuario(auth=false){
         console.log("respuesta peticion", respuesta)
     });
     if(auth){
-        listarUsuarios();
+        listarCategorias();
     }
-    alertas("Se ha registrado el usuario exitosamente!",1)
+    alertas("Se ha registrado la categoria exitosamente!",1)
     document.getElementById("contentModal").innerHTML = '';
     var myModalEl = document.getElementById('modalUsuario')
     var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
