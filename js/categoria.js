@@ -1,12 +1,10 @@
-// funciones js para el modelo de usuario 
-
+//funciones js para el modulo de usuarios
 const urlApi2 = "http://localhost:9000";//colocar la url con el puerto
 
 
 
 function listarCategorias(){
     validaToken();
-    
     var settings={
         method: 'GET',
         headers:{
@@ -19,47 +17,46 @@ function listarCategorias(){
     .then(response => response.json())
     .then(function(data){
         
-            var categorias = '';
+            var categorias = `
+            <div class="p-3 mb-2 bg-light text-dark">
+                    <h1 class="display-5"><i class="fa-solid fa-list"></i> Listado de categorias</h1>
+                </div>
+                  
+                <a href="#" onclick="registerForm('true')" class="btn btn-outline-success"><i class="fa-solid fa-user-plus"></i></a>
+                <table class="table">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">nombre</th>
+                        <th scope="col">descripcion</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listar">`;
             for(const categoria of data){
-                //console.log(usuario.correo)
+                //console.log(categoria.correo)
                 categorias += `
-    
-                <tr>
- 
-                        <th scope="row">${categoria.id}</th>
-                        <td>${categoria.nombre}</td>
-                        <td>${categoria.descripcion}</td>
-
-                        <td>
-                        <button type="button" class="btn btn-outline-danger" 
-                        onclick="eliminaCategoria('${categoria.id}')">
-                            <i class="fa-solid fa-user-minus"></i>
-                        </button>
-                        <i class= "fas fa-edit" onclick="eliminaCategoria('${categoria.id}')" ></i>
-                        <a href="#" onclick="verModificarCategoria('${categoria.id}')" class="btn btn-outline-warning">
-                            <i class="fa-solid fa-user-pen"></i>
-                        </a>
-                        <a href="#" onclick="verCategoria('${categoria.id}')" class="btn btn-outline-info">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                        
-                        <button type="button" class="btn btn-info" onclick="registerForm2()">registrar categoria</button>
-                        </td>
-                        
-                        <br/>
-                </tr>
-
                 
-                `;
+                        <tr>
+                            <th scope="row">${categoria.id}</th>
+                            <td>${categoria.nombre}</td>
+                            <td>${categoria.descripcion}</td>
+                            <td>
+                            <a href="#" onclick="verCategoria('${categoria.id}')" class="btn btn-outline-info">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            </td>
+                        </tr>
+                    `;
                 
             }
+            categorias += `
+            </tbody>
+                </table>
+            `;
             document.getElementById("datos").innerHTML = categorias;
-            
     })
 }
-
-
-
 
 
 function verCategoria(id){
@@ -83,7 +80,8 @@ function verCategoria(id){
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">Nombre: ${categoria.nombre}</li>
-                    <li class="list-group-item">descripcion: ${categoria.descripcion}</li>
+                    <li class="list-group-item">Descripcion: ${categoria.descripcion}</li>
+
                 </ul>`;
               
             }
@@ -94,14 +92,14 @@ function verCategoria(id){
 }
 
 function alertas(mensaje,tipo){
-    var color ="";
+    var color ="warning";
     if(tipo == 1){//success verde
         color="success"
     }
     else{//danger rojo
         color = "danger"
     }
-    var alerta =`<div class="alert alert-'+color+' alert-dismissible fade show" role="alert">
+    var alerta =`<div class="alert alert-${color} alert-dismissible fade show" role="alert">
                     <strong><i class="fa-solid fa-triangle-exclamation"></i></strong>
                         ${mensaje}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -109,43 +107,49 @@ function alertas(mensaje,tipo){
     document.getElementById("alerta").innerHTML = alerta;
 }
 
-
-function registerForm2(){
+function registerForm(auth=false){
     cadena = `
             <div class="p-3 mb-2 bg-light text-dark">
                 <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Registrar Categoria</h1>
             </div>
               
-            <form action="" method="post" id="myForm4">
+            <form action="" method="post" id="myFormReg">
                 <input type="hidden" name="id" id="id">
                 <label for="nombre" class="form-label">First Name</label>
                 <input type="text" class="form-control" name="nombre" id="nombre" required> <br>
-                <label for="descripcion"  class="form-label">Last Name</label>
+                <label for="descripcion"  class="form-label">Description</label>
                 <input type="text" class="form-control" name="descripcion" id="descripcion" required> <br>
-
-                <button type="button" class="btn btn-outline-info" onclick="registrarCategoria()">Registrar</button>
+                <button type="button" class="btn btn-outline-info" onclick="registrarCategoria('${auth}')">Registrar</button>
             </form>`;
             document.getElementById("contentModal").innerHTML = cadena;
             var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
             myModal.toggle();
 }
 
-async function registrarCategoria(){
-    var myForm = document.getElementById("myForm4");
+async function registrarUsuario(auth=false){
+    var myForm = document.getElementById("myFormReg");
     var formData = new FormData(myForm);
     var jsonData = {};
     for(var [k, v] of formData){//convertimos los datos a json
         jsonData[k] = v;
     }
-    const request = await fetch(urlApi2+"/categoria", {
+    console.log("data user ",jsonData);
+    const request = await fetch(urlApi2+"/usuario", {
         method: 'POST',
         headers:{
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(jsonData)
+    })
+    .then(response => response.json())
+    .then(function(respuesta){
+        console.log("respuesta peticion", respuesta)
     });
-
+    if(auth){
+        listarUsuarios();
+    }
+    alertas("Se ha registrado el usuario exitosamente!",1)
     document.getElementById("contentModal").innerHTML = '';
     var myModalEl = document.getElementById('modalUsuario')
     var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
