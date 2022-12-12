@@ -63,7 +63,7 @@ function listarArticulos(){
                             <a href="#" onclick="verModificarArticulo('${articulo.codigo}')" class="btn btn-outline-warning">
                                 <i class="fa-solid fa-user-pen"></i>
                             </a>
-                            <a href="#" onclick="verArticulo('${articulo.codigo}')" class="btn btn-outline-info">
+                            <a href="#" onclick="verArticulo('${articulo.id}')" class="btn btn-outline-info">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                             </td>
@@ -165,7 +165,7 @@ async function modificarUsuario(id){
     modal.hide();
 }
 
-function verUsuario(id){
+function verArticulo(id){
     validaToken();
     var settings={
         method: 'GET',
@@ -175,20 +175,24 @@ function verUsuario(id){
             'Authorization': localStorage.token
         },
     }
-    fetch(urlApi3+"/usuario/"+id,settings)
+    fetch(urlApi3+"/articulo/"+id,settings)
     .then(response => response.json())
-    .then(function(usuario){
+    .then(function(articulo){
             var cadena='';
-            if(usuario){                
+            if(articulo){                
                 cadena = `
                 <div class="p-3 mb-2 bg-light text-dark">
-                    <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Visualizar Usuario</h1>
+                    <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Visualizar Articulo</h1>
                 </div>
                 <ul class="list-group">
-                    <li class="list-group-item">Nombre: ${usuario.nombre}</li>
-                    <li class="list-group-item">Apellido: ${usuario.apellidos}</li>
-                    <li class="list-group-item">Correo: ${usuario.correo}</li>
-                    <li class="list-group-item">Documento: ${usuario.documento}</li>
+                    <li class="list-group-item">codigo: ${articulo.codigo}</li>
+                    <li class="list-group-item">nombre: ${articulo.nombre}</li>
+                    <li class="list-group-item">descripcion: ${articulo.descripcion}</li>
+                    <li class="list-group-item">fecha: ${articulo.fecha_registro}</li>
+                    <li class="list-group-item">stock: ${articulo.stock}</li>
+                    <li class="list-group-item">Documento: ${articulo.precio_venta}</li>
+                    <li class="list-group-item">Documento: ${articulo.precio_compra}</li>
+                    
                 </ul>`;
               
             }
