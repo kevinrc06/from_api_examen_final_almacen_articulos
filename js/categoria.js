@@ -38,11 +38,11 @@ function listarCategorias(){
                 categorias += `
                 
                         <tr>
-                            <th scope="row">${categoria.id}</th>
+                            <th scope="row">${categoria.id_categoria}</th>
                             <td>${categoria.nombre}</td>
                             <td>${categoria.descripcion}</td>
                             <td>
-                            <a href="#" onclick="verCategoria('${categoria.id}')" class="btn btn-outline-info">
+                            <a href="#" onclick="verCategoria('${categoria.id_categoria}')" class="btn btn-outline-info">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                             </td>
@@ -59,7 +59,7 @@ function listarCategorias(){
 }
 
 
-function verCategoria(id){
+function verCategoria(id_categoria){
     validaToken();
     var settings={
         method: 'GET',
@@ -69,7 +69,7 @@ function verCategoria(id){
             'Authorization': localStorage.token
         },
     }
-    fetch(urlApi2+"/categoria/"+id,settings)
+    fetch(urlApi2+"/categoria/"+id_categoria,settings)
     .then(response => response.json())
     .then(function(categoria){
             var cadena='';
@@ -114,7 +114,7 @@ function registerForm2(auth=false){
             </div>
               
             <form action="" method="post" id="myFormReg1">
-                <input type="hidden" name="id" id="id">
+                <input type="hidden" name="id_categoria" id="id_categoria">
                 <label for="nombre" class="form-label">First Name</label>
                 <input type="text" class="form-control" name="nombre" id="nombre" required> <br>
                 <label for="descripcion"  class="form-label">Description</label>

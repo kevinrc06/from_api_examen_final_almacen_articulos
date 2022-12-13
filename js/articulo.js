@@ -22,7 +22,7 @@ function listarArticulos(){
                     <h1 class="display-5"><i class="fa-solid fa-list"></i> Listado de articulos</h1>
                 </div>
                   
-                <a href="#" onclick="registerForm3('true')" class="btn btn-outline-success"><i class="fa-solid fa-user-plus"></i></a>
+                <a href="#" onclick="registerArticulo('true')"  class="btn btn-outline-success"><i class="fa-solid fa-user-plus"></i></a>
                 <table class="table">
                     <thead>
                         <tr>
@@ -218,7 +218,7 @@ function alertas(mensaje,tipo){
     document.getElementById("alerta").innerHTML = alerta;
 }
 
-function registerForm(auth=false){
+/*function registerForm(auth=false){
     cadena = `
             <div class="p-3 mb-2 bg-light text-dark">
                 <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Registrar Usuario</h1>
@@ -241,9 +241,45 @@ function registerForm(auth=false){
             document.getElementById("contentModal").innerHTML = cadena;
             var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
             myModal.toggle();
+}*/
+function registerArticulo(auth=false){
+    cadena = `
+            <div class="p-3 mb-2 bg-light text-dark">
+                <h1 class="display-5"><i class="fa-solid fa-square-plus"></i> Registrar Articulo</h1>
+            </div>
+              
+            <form action="" method="post" id="myForm7">
+            <input type="hidden" name="id" id="id">
+            <label for="codigo" class="form-label">Codigo</label>
+            <input type="text" class="form-control" name="codigo" id="codigo" required> <br>
+            <label for="nombre"  class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" id="nombre" required> <br>
+            <label for="descripcion"  class="form-label">Descripcion</label>
+            <input type="text" class="form-control" name="descripcion" id="descripcion" required> <br>
+            <label for="fecha_registro"  class="form-label">Fecha registro</label>
+            <input type="date" class="form-control" name="fecha_registro" id="fecha_registro" > <br>
+            <label for="stock"  class="form-label">Stock</label>
+            <input type="number" class="form-control" name="stock" id="stock" > <br>
+            <div id="prueba" onclick="categoria()">
+                <label  for="categoria">Escoja categoria</label>
+                <select  class="form-control" id="id_categoria" name="id_categoria">
+                 <option class="FORM-CONTROL" selected disable value="">Seleccione</option>
+                </select>
+            </div>
+            <br>
+            <label for="precio_venta"  class="form-label">Precio venta</label>
+            <input type="number" class="form-control" name="precio_venta" id="precio_venta" > <br>
+            <label for="precio_compra" class="form-label">precio compra</label>
+            <input type="number" class="form-control" name="precio_compra" id="precio_compra" required> <br>
+                <button type="button" class="btn btn-outline-info" onclick="registrarArticulo('${auth}')">Registrar</button>
+            </form>`;
+            document.getElementById("contentModal").innerHTML = cadena;
+            document.getElementById("exampleModalLabel").innerHTML = "Gestión de Articulos";
+            var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
+            myModal.toggle();
 }
 
-async function registrarUsuario(auth=false){
+/*async function registrarUsuario(auth=false){
     var myForm = document.getElementById("myFormReg");
     var formData = new FormData(myForm);
     var jsonData = {};
@@ -271,6 +307,89 @@ async function registrarUsuario(auth=false){
     var myModalEl = document.getElementById('modalUsuario')
     var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
     modal.hide();
+}*/
+async function categoria()
+{
+        let categoria1 = document.querySelector('#id_categoria');
+        var settings={
+            method: 'GET',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.token
+            },
+        }
+        fetch(urlApi3+"/categorias",settings)
+        .then((response) => response.json())
+        .then(function (data) {
+            let template = ''
+            for(const categorias of data){
+                template += "<option value="+categorias.id_categoria+">"+categorias.nombre+"</option>"
+            }
+           categoria1.innerHTML = template
+        
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        document.getElementById('prueba').onclick = "";
+}
+async function registrarArticulo(auth=false){
+    validaToken();
+    let userid= localStorage.id;
+    let codigo = document.querySelector('#myForm7 #codigo').value;
+    let nombre = document.querySelector('#myForm7 #nombre').value;
+    let descripcion = document.querySelector('#myForm7 #descripcion').value;
+    let fecha_registro = document.querySelector('#myForm7 #fecha_registro').value;
+    let categoria = document.querySelector('#myForm7 #id_categoria').value;
+    let stock = parseInt(document.querySelector('#myForm7 #stock').value) ;
+    let precio_venta =parseFloat(document.querySelector('#myForm7 #precio_venta').value);
+    let precio_compra = parseFloat(document.querySelector('#myForm7 #precio_compra').value);
+    var jsonData = {
+        "codigo":codigo,
+        "nombre":nombre,
+        "descripcion":descripcion,
+        "fecha_registro":fecha_registro,
+        "categoria":{
+            "id_categoria":categoria
+        },
+        "usuario":{
+            "id":userid
+        },
+        "stock":stock,
+        "precio_venta":precio_venta,
+        "precio_compra":precio_compra,
+        };
+
+            const request = await fetch(urlApi3+"/articulo", {
+                method: 'POST',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.token
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => response.json())
+            .then(function(respuesta){
+                console.log("respuesta peticion", respuesta)
+            });
+            if(auth){
+                listarArticulos();
+            }
+            alertas("Se ha registrado la categoria exitosamente!",1)
+            document.getElementById("contentModal").innerHTML = '';
+            var myModalEl = document.getElementById('modalUsuario')
+            var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
+            modal.hide();
+      /*listarArticulos();
+      alertas("Se ha registrado el articulo exitosamente!",1)
+      document.getElementById("contentModal").innerHTML = '';
+      var myModalEl = document.getElementById('modalUsuario')
+      var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
+      modal.hide();*/
+
+     
 }
 
 function modalConfirmacion(texto,funcion){
@@ -291,3 +410,5 @@ function validaToken(){
         salir();
     }
 }
+
+
