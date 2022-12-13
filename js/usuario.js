@@ -2,6 +2,7 @@
 const urlApi = "http://localhost:9000";//colocar la url con el puerto
 
 async function login(){
+    let correo = document.querySelector('#myForm #correo').value;
     var myForm = document.getElementById("myForm");
     var formData = new FormData(myForm);
     var jsonData = {};
@@ -19,7 +20,9 @@ async function login(){
     const request = await fetch(urlApi+"/auth/login",settings);
     if(request.ok){
         const respuesta = await request.text();        
-        localStorage.token = respuesta;     
+        localStorage.token = respuesta;
+        localStorage.correo = correo; 
+        consultarUser();    
         location.href= "dashboard.html";
     }
 }
@@ -173,7 +176,26 @@ async function modificarUsuario(id){
     var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
     modal.hide();
 }
-
+async function consultarUser(){
+    var settings={
+        method: 'GET',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.token
+        },
+    }
+    fetch(urlApi+"/usuario/correo/"+localStorage.correo,settings)
+    .then(response => response.json())
+    .then(function(usuario){
+        console.log(usuario);
+            if(usuario){  
+              localStorage.id=usuario.id;
+              
+            }
+            
+    })
+}
 function verUsuario(id){
     validaToken();
     var settings={

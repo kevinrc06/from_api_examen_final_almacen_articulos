@@ -22,7 +22,7 @@ function listarArticulos(){
                     <h1 class="display-5"><i class="fa-solid fa-list"></i> Listado de articulos</h1>
                 </div>
                   
-                <a href="#" onclick="registerArticulo('true')"  class="btn btn-outline-success"><i class="fa-solid fa-user-plus"></i></a>
+                <a href="#" onclick="registerArticulo('true')"  class="btn btn-outline-success"><i class="fa-solid fa-cart-plus"></i></a>
                 <table class="table">
                     <thead>
                         <tr>
@@ -58,7 +58,7 @@ function listarArticulos(){
                             <td>
                             <button type="button" class="btn btn-outline-danger" 
                             onclick="eliminaArticulo('${articulo.codigo}')">
-                                <i class="fa-solid fa-user-minus"></i>
+                                   <i class="fa-solid fa-trash"></i>
                             </button>
                             <a href="#" onclick="verModificarArticulo('${articulo.codigo}')" class="btn btn-outline-warning">
                                 <i class="fa-solid fa-user-pen"></i>
@@ -97,7 +97,7 @@ function eliminaArticulo(codigo){
       })
 }
 
-function verModificarUsuario(id){
+function verModificarArticulo(codigo){
     validaToken();
     var settings={
         method: 'GET',
@@ -107,30 +107,45 @@ function verModificarUsuario(id){
             'Authorization': localStorage.token
         },
     }
-    fetch(urlApi3+"/usuario/"+id,settings)
+    fetch(urlApi3+"/articulo/codigo/"+codigo,settings)
     .then(response => response.json())
-    .then(function(usuario){
+    .then(function(articulo){
             var cadena='';
-            if(usuario){                
+            if(articulo){    
+                var date =articulo.fecha_registro+"";
+                //console.log(date)
+                var dato =date.split('T');            
                 cadena = `
                 <div class="p-3 mb-2 bg-light text-dark">
-                    <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Modificar Usuario</h1>
+                    <h1 class="display-5"><i class="fa-solid fa-pen"></i> Modificar Articulo</h1>
                 </div>
               
                 <form action="" method="post" id="myForm">
-                    <input type="hidden" name="id" id="id" value="${usuario.id}">
-                    <label for="nombre" class="form-label">First Name</label>
-                    <input type="text" class="form-control" name="nombre" id="nombre" required value="${usuario.nombre}"> <br>
-                    <label for="apellidos"  class="form-label">Last Name</label>
-                    <input type="text" class="form-control" name="apellidos" id="apellidos" required value="${usuario.apellidos}"> <br>
-                    <label for="documento"  class="form-label">document</label>
-                    <input type="text" class="form-control" name="documento" id="documento" required value="${usuario.documento}"> <br>
-                    <label for="correo" class="form-label">correo</label>
-                    <input type="correo" class="form-control" name="correo" id="correo" required value="${usuario.correo}"> <br>
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required> <br>
+                <input type="hidden" name="id" id="id" value="${articulo.id}">
+                <label for="codigo" class="form-label">Codigo</label>
+                <input type="text" class="form-control" name="codigo" id="codigo" required value="${articulo.codigo}"> <br>
+                <label for="nombre"  class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" id="nombre" required value="${articulo.nombre}"> <br>
+                <label for="descripcion"  class="form-label">Descripcion</label>
+                <input type="text" class="form-control" name="descripcion" id="descripcion" required value="${articulo.descripcion}"> <br>
+                
+                <label for="fecha_registro"  class="form-label">Fecha de registro</label>
+                <input type="date" class="form-control" name="direccion" id="fecha_registro" required > <br>
+                <div id="prueba" onclick="categoria()" ">
+                <label  for="categoria">Escoja categoria</label>
+                <select  class="form-control" id="id_categoria" name="id_categoria" >
+                <option class="FORM-CONTROL" selected disable value="">Seleccione</option>
+                </select>
+                </div>
+                 <br>
+                <label for="stock"  class="form-label">Stock</label>
+                <input type="number" class="form-control" name="stock" id="stock" value="${articulo.stock}"> <br>
+                <label for="precio_venta"  class="form-label">Precio venta</label>
+                <input type="number" class="form-control" name="precio_venta" id="precio_venta" value="${articulo.precio_venta}" > <br>
+                <label for="precio_compra" class="form-label">precio compra</label>
+                <input type="number" class="form-control" name="precio_compra" id="precio_compra" required value="${articulo.precio_compra}"> <br>
                     <button type="button" class="btn btn-outline-warning" 
-                        onclick="modificarUsuario('${usuario.id}')">Modificar
+                        onclick="modificarArticulo('${articulo.codigo}')">Modificar
                     </button>
                 </form>`;
             }
@@ -140,15 +155,34 @@ function verModificarUsuario(id){
     })
 }
 
-async function modificarUsuario(id){
+async function modificarArticulo(codigo){
     validaToken();
-    var myForm = document.getElementById("myForm");
-    var formData = new FormData(myForm);
-    var jsonData = {};
-    for(var [k, v] of formData){//convertimos los datos a json
-        jsonData[k] = v;
-    }
-    const request = await fetch(urlApi3+"/usuario/"+id, {
+    let userid= "1";
+    let nombre = document.querySelector('#myForm #nombre').value;
+    let descripcion = document.querySelector('#myForm #descripcion').value;
+    let fecha_registro = document.querySelector('#myForm #fecha_registro').value;
+    let categoria = document.querySelector('#myForm #id_categoria').value;
+    let stock = parseInt(document.querySelector('#myForm #stock').value) ;
+    let precio_venta =parseFloat(document.querySelector('#myForm #precio_venta').value);
+    let precio_compra = parseFloat(document.querySelector('#myForm #precio_compra').value);
+    var jsonData = {
+        "codigo":codigo,
+        "nombre":nombre,
+        "descripcion":descripcion,
+        "fecha_registro":fecha_registro,
+        "stock":stock,
+        "categoria":{
+            "id_categoria":categoria
+        },
+        "usuario":{
+            "id":userid
+        },
+        
+        "precio_venta":precio_venta,
+        "precio_compra":precio_compra,
+        };
+        console.log(jsonData);
+    const request = await fetch(urlApi3+"/articulo/"+codigo, {
         method: 'PUT',
         headers:{
             'Accept': 'application/json',
@@ -157,12 +191,14 @@ async function modificarUsuario(id){
         },
         body: JSON.stringify(jsonData)
     });
-    listarUsuarios();
-    alertas("Se ha modificado el usuario exitosamente!",1)
-    document.getElementById("contentModal").innerHTML = '';
-    var myModalEl = document.getElementById('modalUsuario')
-    var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
-    modal.hide();
+    
+        listarArticulos();
+        alertas("Se ha modificado el articulo exitosamente!",1)
+        document.getElementById("contentModal").innerHTML = '';
+        var myModalEl = document.getElementById('modalUsuario')
+        var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
+        modal.hide();
+
 }
 
 function verArticulo(codigo){
@@ -335,8 +371,8 @@ async function categoria()
         document.getElementById('prueba').onclick = "";
 }
 async function registrarArticulo(auth=false){
-    validaToken();
-    let userid= localStorage.id;
+   validaToken();    
+    let userid= "1";
     let codigo = document.querySelector('#myForm7 #codigo').value;
     let nombre = document.querySelector('#myForm7 #nombre').value;
     let descripcion = document.querySelector('#myForm7 #descripcion').value;
@@ -345,22 +381,23 @@ async function registrarArticulo(auth=false){
     let stock = parseInt(document.querySelector('#myForm7 #stock').value) ;
     let precio_venta =parseFloat(document.querySelector('#myForm7 #precio_venta').value);
     let precio_compra = parseFloat(document.querySelector('#myForm7 #precio_compra').value);
+    
     var jsonData = {
         "codigo":codigo,
         "nombre":nombre,
         "descripcion":descripcion,
         "fecha_registro":fecha_registro,
+        "stock":stock,
         "categoria":{
             "id_categoria":categoria
         },
         "usuario":{
             "id":userid
         },
-        "stock":stock,
         "precio_venta":precio_venta,
         "precio_compra":precio_compra,
         };
-
+        console.log(jsonData);
             const request = await fetch(urlApi3+"/articulo", {
                 method: 'POST',
                 headers:{
