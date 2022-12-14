@@ -1,4 +1,5 @@
 //funciones js para el modulo de usuarios
+
 const urlApi = "http://localhost:9000";//colocar la url con el puerto
 
 async function login(){
@@ -19,14 +20,19 @@ async function login(){
     }
     const request = await fetch(urlApi+"/auth/login",settings);
     if(request.ok){
+        alert("usuario registrado con exitoso, espero un momento");
         const respuesta = await request.text();        
         localStorage.token = respuesta;
         localStorage.correo = correo; 
         consultarUser();    
         setTimeout(function(){
             location.href= "dashboard.html";
-        }, 2000);
+        }, 1500);
     }
+    else{
+        alert("datos erroneos");
+    }
+
 }
 
 function listarUsuarios(){
@@ -56,6 +62,9 @@ function listarUsuarios(){
                         <th scope="col">First Name</th>
                         <th scope="col">Last Name</th>
                         <th scope="col">Email</th>
+                        <th scope="col">dirreccion</th>
+                        <th scope="col">fecha nacimiento</th>
+
                         <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -69,6 +78,9 @@ function listarUsuarios(){
                             <td>${usuario.nombre}</td>
                             <td>${usuario.apellidos}</td>
                             <td>${usuario.correo}</td>
+                            <td>${usuario.direccion}</td>
+                            <td>${usuario.fechaNacimiento}</td>
+
                             <td>
                             <button type="button" class="btn btn-outline-danger" 
                             onclick="eliminaUsuario('${usuario.id}')">
@@ -223,6 +235,9 @@ function verUsuario(id){
                     <li class="list-group-item">Apellido: ${usuario.apellidos}</li>
                     <li class="list-group-item">Correo: ${usuario.correo}</li>
                     <li class="list-group-item">Documento: ${usuario.documento}</li>
+                    <li class="list-group-item">direccion: ${usuario.direccion}</li>
+                    <li class="list-group-item">fecha nacimiento: ${usuario.fechaNacimiento}</li>
+
                 </ul>`;
               
             }
@@ -262,6 +277,10 @@ function registerForm(auth=false){
                 <input type="text" class="form-control" name="apellidos" id="apellidos" required> <br>
                 <label for="documento"  class="form-label">document</label>
                 <input type="text" class="form-control" name="documento" id="documento" required> <br>
+                <label for="direccion"  class="form-label">document</label>
+                <input type="text" class="form-control" name="direccion" id="direccion" required> <br>
+                <label for="fechaNacimiento"  class="form-label">Fecha nacimiento</label>
+                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" > <br>
                 <label for="correo" class="form-label">correo</label>
                 <input type="correo" class="form-control" name="correo" id="correo" required> <br>
                 <label for="password" class="form-label">Password</label>

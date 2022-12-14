@@ -93,7 +93,7 @@ function eliminaArticulo(codigo){
     .then((data) => {
         console.log(data); // JSON data parsed by `data.json()` call
         listarArticulos();
-        alertas("Se ha eliminado el usuario exitosamente!",2)
+        alertas("Se ha eliminado el articulo exitosamente!",2)
       })
 }
 
@@ -130,7 +130,7 @@ function verModificarArticulo(codigo){
                 <input type="text" class="form-control" name="descripcion" id="descripcion" required value="${articulo.descripcion}"> <br>
                 
                 <label for="fecha_registro"  class="form-label">Fecha de registro</label>
-                <input type="date" class="form-control" name="direccion" id="fecha_registro" required > <br>
+                <input type="date" class="form-control" name="fecha_registro" id="fecha_registro" required > <br>
                 <div id="prueba" onclick="categoria()" ">
                 <label  for="categoria">Escoja categoria</label>
                 <select  class="form-control" id="id_categoria" name="id_categoria" >
@@ -414,7 +414,7 @@ async function registrarArticulo(auth=false){
             if(auth){
                 listarArticulos();
             }
-            alertas("Se ha registrado la categoria exitosamente!",1)
+            alertas("Se ha registrado el articulo exitosamente!",1)
             document.getElementById("contentModal").innerHTML = '';
             var myModalEl = document.getElementById('modalUsuario')
             var modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
