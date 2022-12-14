@@ -277,7 +277,7 @@ function registerForm(auth=false){
                 <input type="text" class="form-control" name="apellidos" id="apellidos" required> <br>
                 <label for="documento"  class="form-label">document</label>
                 <input type="text" class="form-control" name="documento" id="documento" required> <br>
-                <label for="direccion"  class="form-label">document</label>
+                <label for="direccion"  class="form-label">direccion</label>
                 <input type="text" class="form-control" name="direccion" id="direccion" required> <br>
                 <label for="fechaNacimiento"  class="form-label">Fecha nacimiento</label>
                 <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" > <br>
