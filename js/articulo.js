@@ -372,7 +372,7 @@ async function categoria()
 }
 async function registrarArticulo(auth=false){
    validaToken();    
-    let userid= "1";
+    let userid= localStorage.id;
     let codigo = document.querySelector('#myForm7 #codigo').value;
     let nombre = document.querySelector('#myForm7 #nombre').value;
     let descripcion = document.querySelector('#myForm7 #descripcion').value;

@@ -23,7 +23,9 @@ async function login(){
         localStorage.token = respuesta;
         localStorage.correo = correo; 
         consultarUser();    
-        location.href= "dashboard.html";
+        setTimeout(function(){
+            location.href= "dashboard.html";
+        }, 2000);
     }
 }
 
@@ -185,7 +187,7 @@ async function consultarUser(){
             'Authorization': localStorage.token
         },
     }
-    fetch(urlApi+"/usuario/correo/"+localStorage.correo,settings)
+    const respuesta=fetch(urlApi+"/usuario/correo/"+localStorage.correo,settings)
     .then(response => response.json())
     .then(function(usuario){
         console.log(usuario);
@@ -195,6 +197,7 @@ async function consultarUser(){
             }
             
     })
+    console.log("respuesta id",respuesta);
 }
 function verUsuario(id){
     validaToken();
