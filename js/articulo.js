@@ -157,7 +157,7 @@ function verModificarArticulo(codigo){
 
 async function modificarArticulo(codigo){
     validaToken();
-    let userid= "1";
+    let userid= localStorage.id;
     let nombre = document.querySelector('#myForm #nombre').value;
     let descripcion = document.querySelector('#myForm #descripcion').value;
     let fecha_registro = document.querySelector('#myForm #fecha_registro').value;
