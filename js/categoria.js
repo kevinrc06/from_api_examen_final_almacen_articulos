@@ -43,7 +43,7 @@ function listarCategorias(){
                             <td>${categoria.descripcion}</td>
                             <td>
                             <a href="#" onclick="verCategoria('${categoria.id_categoria}')" class="btn btn-outline-info">
-                                <i class="fa-solid fa-eye"></i>
+                                <i class="fa-regular fa-eye"></i>
                             </a>
                             </td>
                         </tr>

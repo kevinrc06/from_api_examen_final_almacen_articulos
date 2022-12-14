@@ -61,10 +61,10 @@ function listarArticulos(){
                                    <i class="fa-solid fa-trash"></i>
                             </button>
                             <a href="#" onclick="verModificarArticulo('${articulo.codigo}')" class="btn btn-outline-warning">
-                                <i class="fa-solid fa-user-pen"></i>
+                                <i class="fa-solid fa-pen"></i>
                             </a>
                             <a href="#" onclick="verArticulo('${articulo.codigo}')" class="btn btn-outline-info">
-                                <i class="fa-solid fa-eye"></i>
+                                <i class="fa-regular fa-eye"></i>
                             </a>
                             </td>
                         </tr>
